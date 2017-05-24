@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <script src="https://code.highcharts.com/4/highcharts.js"></script>
+    </head>
+    <body>
+        <div id="mychart"></div>
+
+        <script>
+            var chart = (function() {
+                'use strict';
+
+                function createChart(){
+
+                }
+
+                return {
+                    createChart : createChart
+                };
+            })();
+
+            window.addEventListener("load", chart.createChart());
+        </script>
+    </body>
+</html>
