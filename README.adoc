@@ -1,9 +1,9 @@
 
 image::logo_long.svg[Gradle Kotlin, width=50%, align=center]
 
-Il existe plusieurs librairies pour faire des graphiques sour votre site web. En ce moment j'utilise https://www.highcharts.com/[highcharts]. Cette librairie a l'avantage de proposer un site avec beaucoup d'exemples et une description fine de l'API.
+Il existe plusieurs librairies pour faire des graphiques sur un site web. En ce moment j'utilise https://www.highcharts.com/[highcharts]. Cette librairie a l'avantage de proposer un site avec beaucoup d'exemples et une bonne description de l'API.
 
-Mais les options de paramétrages sont très nombreuses et il n'est pas toujours simple de faire un graphique qui colle à notre use case. Je vais prendre un exemple que j'ai rencontré récemment dans lequel je devais créer un graphique composé de zones empilées (staked area) représentant des valeurs négatives et positives. Forcément si j'écris cet article, c'est que tout n'a pas été tout rose et mon cas peut peut être aider d'autres personnes.
+Mais les options de paramétrages sont très nombreuses et il n'est pas toujours simple de faire un graphique qui colle à notre use case. Je vais prendre un exemple que j'ai rencontré récemment. Je devais créer un graphique composé de zones empilées (staked area) représentant des valeurs négatives et positives. Forcément si j'écris cet article, c'est que tout n'a pas été tout rose.
 
 == Créer un grapique de type _stacked area_
 
@@ -98,17 +98,17 @@ Pour contourner le problème nous allons n'afficher que des courbes qui contienn
   }
 ----
 
-Pour éviter d'avoir une double légende nous utilisons la propriété `_showInLegend: positive_`. Plus important pour avoir un graphique valable, nous devons indiquer à https://www.highcharts.com/[Highcharts] que nous avons 2 manières d'empiler les données (une pour les valeurs positives et une pour les négatives). Nous l'indiquons avec la propriété `_stack: positive ? 1 : 0_`. Les valeurs de cette propriété sont peut importantes elles doivent juste être distinctes dans les 2 cas.
+Pour éviter d'avoir une double légende nous utilisons la propriété `_showInLegend: positive_`. Plus important pour avoir un graphique valable, nous devons indiquer à https://www.highcharts.com/[Highcharts] que nous avons 2 manières d'empiler les données (une pour les valeurs positives et une pour les négatives). Nous l'indiquons avec la propriété `_stack: positive ? 1 : 0_`. Les valeurs sont peut importantes elles doivent juste être distinctes dans les 2 cas.
 
 Nous optenons
 
 image::chart2.png[Exemple ne marchant pas beaucoup plus]
 
-Est ce mieux ? Les valeurs positives et négatives sont maintenant justes en cumulées. Si je prends le troisième pas de temps
+Est ce mieux ? Les valeurs positives et négatives sont maintenant justes en cumulées. Mais si nous zoomon et regardons par exemple le troisième pas de temps et notamment les enchaînnements entre les points :
 
 image::chart3.png[OK en cumulé]
 
-Par contre le dessin du graphe est faux quand nous passons d'une valeur positive à négative. Si nous n'affichons qu'une série nous pouvons voir le problème
+Le dessin du graphe est faux quand nous passons d'une valeur positive à négative. Si nous n'affichons qu'une série nous pouvons voir le problème
 
 image::chart4.png[référence à 0]
 
@@ -116,10 +116,11 @@ Comme nous faisons une référence à 0 le tracé est faux.
 
 == Quelle solution choisir ?
 
-Il n'y a pas de solution idéale. Si vous voulez des zones empilées le tracé de courbe sera faux. Visuellement les défauts sont atténués si vous n'avez pas de grande variation de valeurs et si ces valeurs sont nombreuses.
+Il n'y a pas de solution idéale. Si vous voulez des zones empilées le tracé de courbe sera faux. Visuellement les défauts sont atténués si vous n'avez pas de grandes variations des valeurs et si ces valeurs sont nombreuses.
 
 image::chart5.png[plus de valeurs]
 
-L'autre solution est de ne pas utiliser ce type de graphique si vous cumulez des valeurs positives et négatives. Vous pouvez par exemple utiliser le type `_column_`
+L'autre solution est de ne pas utiliser ce type de graphique si vous voulez cumuler des valeurs positives et négatives. Vous pouvez par exemple utiliser le type `_column_`
 
 image::chart6.png[type column]
+
