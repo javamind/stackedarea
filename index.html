@@ -8,178 +8,233 @@
 <div id="myBadchart"></div>
 <div id="myGoodchart"></div>
 <script>
-  var chart = (function () {
-    'use strict';
+    var chart = (function () {
+        'use strict';
 
-    const START_INSTANT = 1495587600;
+        const START_INSTANT = 1495587600;
 
-    const BASE_COLORS = [
-      '#27ae60', '#2980b9',
-      '#8e44ad', '#f1c40f',
-      '#e67e22', '#e74c3c'
-    ];
+        const BASE_COLORS = [
+            '#27ae60', '#2980b9',
+            '#8e44ad', '#f1c40f',
+            '#e67e22', '#e74c3c'
+        ];
 
-    /**
-     * Create an array with measures for test. In real life we should call a remote API
-     */
-    function _createMeasures(values) {
-      let cpt = 0;
-      return values.map((val => {
-        return {
-          instant: START_INSTANT + 3600000 * cpt++,
-          value: val * 1000
+        /**
+         * Create an array with measures for test. In real life we should call a remote API
+         */
+        function _createMeasures(values) {
+            let cpt = 0;
+            return values.map((val => {
+                return {
+                    instant: START_INSTANT + 3600000 * cpt++,
+                    value: val * 1000
+                }
+            }));
         }
-      }));
-    }
 
-    let MEASURES = [
-      {
-        source: "Captor 1",
-        measures: _createMeasures([0.739, 0.935, 0.738, 0.789, 0.769, 0.838, 0.941, 0.1, -1.106, -2.246, -1.78, -1.393, -1.006])
-      },
-      {
-        source: "Captor 2",
-        measures: _createMeasures([1.4, 2.8, 1.9, 4.3, 2.2, 2.67, 3.40, -2.464, 2.328, -2.1, -2.09, 2.048, -2.56])
-      },
-      {
-        source: "Captor 3",
-        measures: _createMeasures([2.336, -2.56, -2.464, 2.328, -2.1, -2.09, 2.048, -2.56, -2.464, 2.328, -2.1, -2.09, 2.048])
-      },
-      {
-        source: "Captor 4",
-        measures: _createMeasures([-0.953, -0.913, -1.106, -2.246, -1.78, -1.393, -1.006, 0.935, 0.738, 0.789, 0.769, 0.838, 0.941])
-      },
-      {
-        source: "Captor 5",
-        measures: _createMeasures([1.918, -2.554, -1.913, 3.398, -3.212, -3.379, 2.401, -2.554, -1.913, 3.398, -3.212, -3.379, 2.401])
-      },
-      {
-        source: "Captor 6",
-        measures: _createMeasures([-0.81, -0.829, -0.886, -1.888, -1.004, -2.784, -1.792, -0.829, -0.886, -1.888, -1.004, -2.784, -1.792])
-      }
-    ];
+        let MEASURES = [
+            {
+                source: "Captor 1",
+                measures: _createMeasures([0.739, 0.935, 0.738, 0.789, 0.769, 0.838, 0.941, 0.1, -1.106, -2.246, -1.78, -1.393, -1.006])
+            },
+            {
+                source: "Captor 2",
+                measures: _createMeasures([1.4, 2.8, 1.9, 4.3, 2.2, 2.67, 3.40, -2.464, 2.328, -2.1, -2.09, 2.048, -2.56])
+            },
+            {
+                source: "Captor 3",
+                measures: _createMeasures([2.336, -2.56, -2.464, 2.328, -2.1, -2.09, 2.048, -2.56, -2.464, 2.328, -2.1, -2.09, 2.048])
+            },
+            {
+                source: "Captor 4",
+                measures: _createMeasures([-0.953, -0.913, -1.106, -2.246, -1.78, -1.393, -1.006, 0.935, 0.738, 0.789, 0.769, 0.838, 0.941])
+            },
+            {
+                source: "Captor 5",
+                measures: _createMeasures([1.918, -2.554, -1.913, 3.398, -3.212, -3.379, 2.401, -2.554, -1.913, 3.398, -3.212, -3.379, 2.401])
+            },
+            {
+                source: "Captor 6",
+                measures: _createMeasures([-0.81, -0.829, -0.886, -1.888, -1.004, -2.784, -1.792, -0.829, -0.886, -1.888, -1.004, -2.784, -1.792])
+            }
+        ];
 
-    function createChart() {
-      Highcharts.setOptions({
-        title: {text: 'Stack area in Highchart'},
-        xAxis: {
-          type: 'datetime',
-        },
-        tooltip: {
-          formatter: function () {
-            // For the power chart we have 2 values by point. We need to group them and sum the y value
-            // (all the over properties are equals)
-            let points = Object.values(this.points
-              .reduce((acc, value) => {
-                if (acc && acc[value.series.name]) {
-                  acc[value.series.name].y += value.y;
-                }
-                else {
-                  acc[value.series.name] = value;
-                }
-                return acc;
-              }, {}));
+        function createChart() {
+            Highcharts.setOptions({
+                title: {text: 'Stack area in Highchart'},
+                xAxis: {
+                    type: 'datetime',
+                },
+                tooltip: {
+                    formatter: function () {
+                        // For the power chart we have 2 values by point. We need to group them and sum the y value
+                        // (all the over properties are equals)
+                        let points = Object.values(this.points
+                            .reduce((acc, value) => {
+                                if (acc && acc[value.series.name]) {
+                                    acc[value.series.name].y += value.y;
+                                }
+                                else {
+                                    acc[value.series.name] = value;
+                                }
+                                return acc;
+                            }, {}));
 
-            const rows = points
-              .map(point => {
-                return `
+                        const rows = points
+                            .map(point => {
+                                return `
                                         <tr>
                                             <td style="min-width:15px" bgcolor="${point.series.color}">&nbsp;</td>
                                             <td>&nbsp;</td>
                                             <td style="text-align: left">${point.series.name}</td>
                                             <td style="text-align: right">${point.y}</td>
                                         </tr>`;
-              })
-              .reduce((acc, value) => acc.concat(value));
+                            })
+                            .reduce((acc, value) => acc.concat(value));
 
-            return `<table style="font-size: 9px;width:100px">
+                        return `<table style="font-size: 9px;width:100px">
                                             ${rows}
                                         </table>
                                 `;
-          },
-          shared: true,
-          crosshairs: true,
-          useHTML: true
-        },
-        plotOptions: {
-          column: {
-            stacking: 'normal',
-            events: {
-              legendItemClick: (event) => {
-                let visible = event.target.visible;
-                event.target.chart.series
-                  .filter((serie) => event.target.name === serie.name)
-                  .forEach((serie) => visible ? serie.hide() : serie.show());
-                return false;
-              }
+                    },
+                    shared: true,
+                    crosshairs: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    area: {
+                        stacking: 'normal',
+                        events: {
+                            legendItemClick: (event) => {
+                                let visible = event.target.visible;
+                                event.target.chart.series
+                                    .filter((serie) => event.target.name === serie.name)
+                                    .forEach((serie) => visible ? serie.hide() : serie.show());
+                                return false;
+                            }
+                        }
+                    }
+                },
+                credits: {
+                    enabled: false
+                }
+            });
+
+            new Highcharts.Chart({chart: {renderTo: 'myBadchart'}, series: _createSimpleSeries()})
+            new Highcharts.Chart({chart: {renderTo: 'myGoodchart'}, series: _createDoubleSeries()})
+        }
+
+        function _createSimpleSeries() {
+            return MEASURES.map((serie, i) => {
+                return {
+                    type: 'area',
+                    name: serie.source,
+                    color: BASE_COLORS[i % BASE_COLORS.length],
+                    data: serie.measures
+                        .map((measure) => {
+                            return {x: measure.instant, y: measure.value}
+                        }),
+                    marker: {
+                        enabled: false
+                    }
+                }
+            });
+        }
+
+        function _createSerie(serie, color, positive) {
+            let evaluator = (measure) => {
+                if (measure.value > 0) {
+                    return positive ? measure.value : 0;
+                }
+                return positive ? 0 : measure.value;
+            };
+            return {
+                //id: serie.source,
+                type: 'area',
+                stack: positive ? 1 : 0,
+                showInLegend: positive,
+                name: serie.source,
+                color: color,
+                data: serie.measures
+                    .map((measure) => {
+                        return {x: measure.instant, y: positive !== null ? evaluator(measure) : measure.value}
+                    }),
+                marker: {
+                    enabled: false
+                }
             }
-          }
-        },
-        credits: {
-          enabled: false
         }
-      });
 
-      new Highcharts.Chart({chart: {renderTo: 'myBadchart'}, series: _createSimpleSeries()})
-      new Highcharts.Chart({chart: {renderTo: 'myGoodchart'}, series: _createDoubleSeries()})
-    }
+        // function filterValuesBySign(serie, positive){
+        //     let transitionPoints = [];
+        //
+        //     let values = serie.measures
+        //         .map((element, index, array) => {
+        //             let old = index > 0 ? array[index - 1] : undefined;
+        //             if (old) {
+        //                 // Si on a un changement de signe on doit calculer la transition
+        //                 if (old.value && (old.value < 0 && element.value > 0) || (old.value > 0 && element.value < 0)) {
+        //                     return {
+        //                         "instant": (old.instant + element.instant) / 2,
+        //                         "value": (old.value + element.value) / 2
+        //                     }
+        //                 }
+        //             }
+        //             return undefined;
+        //         })
+        // }
 
-    function _createSimpleSeries() {
-      return MEASURES.map((serie, i) => {
+        function _createDoubleSeries() {
+            // Pour résoudre le problème des transitions entre les valeurs positives et négatives on va rajouter des
+            // points intermédiraires pour réduire les problèmes et surtout être juste lorsque nous avons
+            // qu'une seule serie de mesure
+            let transitionInstants = new Set()
+            MEASURES.forEach(element => {
+                element.measures.forEach((element, index, array) => {
+                    let old = index > 0 ? array[index - 1] : undefined;
+                    if (old && ((old.value < 0 && element.value > 0) || (old.value > 0 && element.value < 0))) {
+                        transitionInstants.add((old.instant + element.instant) / 2);
+                    }
+                })
+            });
+
+            return MEASURES.map((serie, i) => {
+                let color = BASE_COLORS[i % BASE_COLORS.length];
+
+                // We need to add new points in series depending on the transitionInstants
+                serie.measures
+                    .map((element, index, array) => {
+                        const old = index > 0 ? array[index - 1] : undefined;
+                        if (old) {
+                            const transition = (old.instant + element.instant) / 2
+                            if (transitionInstants.has(transition)) {
+                                let signUpdate = (old.value < 0 && element.value > 0) || (old.value > 0 && element.value < 0);
+                                return {
+                                    "instant": (old.instant + element.instant) / 2,
+                                    "value": signUpdate ? 0 : (old.value + element.value) / 2
+                                }
+                            }
+                        }
+                        return undefined;
+                    })
+                    .filter(element => element)
+                    .forEach(element => serie.measures.push(element))
+
+                serie.measures.sort((a, b) => a.instant - b.instant)
+
+                return [
+                    _createSerie(serie, color, true),
+                    _createSerie(serie, color, false)
+                ];
+            }).reduce((acc, val) => acc.concat(val));
+        }
+
         return {
-          type: 'column',
-          name: serie.source,
-          color: BASE_COLORS[i % BASE_COLORS.length],
-          data: serie.measures
-            .map((measure) => {
-              return {x: measure.instant, y: measure.value}
-            }),
-          marker: {
-            enabled: false
-          }
-        }
-      });
-    }
+            createChart: createChart
+        };
+    })();
 
-    function _createSerie(serie, color, positive) {
-      let evaluator = (measure) => {
-        if (measure.value > 0) {
-          return positive ? measure.value : 0;
-        }
-        return positive ? 0 : measure.value;
-      };
-      return {
-        type: 'column',
-        stack: positive ? 1 : 0,
-        showInLegend: positive,
-        name: serie.source,
-        color: color,
-        data: serie.measures
-          .map((measure) => {
-            return {x: measure.instant, y: positive !== null ? evaluator(measure) : measure.value}
-          }),
-        marker: {
-          enabled: false
-        }
-      }
-    }
-
-    function _createDoubleSeries() {
-      return MEASURES.map((serie, i) => {
-          let color = BASE_COLORS[i % BASE_COLORS.length];
-          return [
-            _createSerie(serie, color, true),
-            _createSerie(serie, color, false)
-          ];
-        }).reduce((acc, val) => acc.concat(val));
-    }
-
-    return {
-      createChart: createChart
-    };
-  })();
-
-  window.addEventListener("load", chart.createChart());
+    window.addEventListener("load", chart.createChart());
 </script>
 </body>
 </html>
